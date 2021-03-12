@@ -10,7 +10,11 @@ This is a heatmap based on microarray data. They tested the gene expression leve
 
 ## Material and Method
 The data were from the Accelerating Medicines Partnership-Alzheimer's Disease AMP-AD shared microarray data and ArrayExpress. Differentially expression fold changes are recorded as xslx files in the supplimentary materials of the article. p-value is calculated by Adaptively Weighted with One-sided Correction in R package "MetaDE"(version 1.0.5). 
-There are additional normalization and data cleanup procedures before or after the raw data were transformed into xlsx. I will consider to replicate the works or directly start from the xslx basing on the time I have. The heatmap was drawn by R. The author didn't show which package he used to generate the heatmap, but ggplot2 should be able to do that.
+There are additional normalization and data cleanup procedures before or after the raw data were transformed into xlsx. I will consider to replicate the works or directly start from the xslx basing on the time I have. The heatmap was drawn by R. The author didn't show which package he used to generate the heatmap, so here're the ways I found. In this way, I will skip the p-value based selection of candidate gene and calculation of meta expression value. As I am quite new to this, it's better not to be so aggressive. And, these steps can actually be done easily on Galaxy website instead of by coding.
+1. Transform the excel1 file back to csv file, re-organize the data. Set the brain regions basing on raws instead of columns.
+2. Copy another table of these data, transform the expression change value into +/-, and compare it with excel2. Get a list of AD-specific genes.
+3. Draw the heatmap by pheatmap package on R, or matplotlib function from python.
+4. Label the AD-specific genes in step 2 as red.
 
 ## Conclusion
 They presented the most extensive human AD brain microarray transcriptomic meta-analysis study to date, incorporating, brain regions both affected and partially spared by AD pathology, and utilize related non-AD disorders to infer AD-specific brain change. They identified seven genes specifically perturbed across all AD brain regions and are considered disease-specific, nineteen genes specifically perturbed in AD brains which could play a role in AD neuropathology.
