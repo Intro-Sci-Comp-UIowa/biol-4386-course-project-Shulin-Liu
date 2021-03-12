@@ -10,7 +10,16 @@ This is a heatmap based on microarray data. They tested the gene expression leve
 
 ## Material and Method
 The data were from the Accelerating Medicines Partnership-Alzheimer's Disease AMP-AD shared microarray data and ArrayExpress. Differentially expression fold changes are recorded as xslx files in the supplimentary materials of the article. p-value is calculated by Adaptively Weighted with One-sided Correction in R package "MetaDE"(version 1.0.5). 
-There are additional normalization and data cleanup procedures before or after the raw data were transformed into xlsx. I will consider to replicate the works or directly start from the xslx basing on the time I have. The heatmap was drawn by R. The author didn't show which package he used to generate the heatmap, so here're the ways I found. In this way, I will skip the p-value based selection of candidate gene and calculation of meta expression value. As I am quite new to this, it's better not to be so aggressive. And, these steps can actually be done easily on Galaxy website instead of by coding.
+There are additional normalization and data cleanup procedures before or after the raw data were transformed into xlsx. I will consider to replicate the works or directly start from the xslx basing on the time I have.  
+jad_2019_68-4_jad-68-4-jad181085_jad-68-jad181085-s001.xlsx is the table for Meta-analysis of the 22 AD datasets;  
+column A-E are Cerebellum data; G-K are Frontal Lobe; M-Q are Parietal Lobe; S-W are Temporal Lobe.  
+In order: Gene ID; Gene name; Description; Meta expression change value; p-value.  
+
+jad_2019_68-4_jad-68-4-jad181085_jad-68-jad181085-s002.xlsx is the table for Meta-analysis of the 21 non-AD datasets;  
+column A-D are Cerebellum; F-I are Frontal Lobe; K-N are Parietal Lobe; P-S are Temporal Lobe.  
+In order: Gene ID; Gene name; p-value; regulation direction.  
+
+The heatmap was drawn by R. The author didn't show which package he used to generate the heatmap, so here're the ways I found. In this way, I will skip the p-value based selection of candidate gene and calculation of meta expression value. As I am quite new to this, it's better not to be so aggressive. And, these steps can actually be done easily on Galaxy website instead of by coding.
 1. Transform the excel1 file back to csv file, re-organize the data. Set the brain regions basing on raws instead of columns.
 2. Copy another table of these data, transform the expression change value into +/-, and compare it with excel2. Get a list of AD-specific genes.
 3. Draw the heatmap by pheatmap package on R, or matplotlib function from python.
