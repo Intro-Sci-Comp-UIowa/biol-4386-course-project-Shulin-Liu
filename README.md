@@ -29,7 +29,7 @@ The heatmap was drawn by R. The author didn't show which package he used to gene
 
 ## Result  
 This is a heatmap of the first part only: with only the genes upregulated in all four regions:  
-![](https://notebooks.hpc.uiowa.edu/biol4386/user/shulliu/view/project/Rplot.png)  
+![](https://raw.github.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/blob/main/Output/Rplot.png)  
 
 ## Conclusion
 They presented the most extensive human AD brain microarray transcriptomic meta-analysis study to date, incorporating, brain regions both affected and partially spared by AD pathology, and utilize related non-AD disorders to infer AD-specific brain change. They identified seven genes specifically perturbed across all AD brain regions and are considered disease-specific, nineteen genes specifically perturbed in AD brains which could play a role in AD neuropathology.
