@@ -27,5 +27,9 @@ The heatmap was drawn by R. The author didn't show which package he used to gene
 4. Draw the heatmap by pheatmap package on R, or matplotlib function from python.  
 5. Label the AD-specific genes in step 2 as red.  
 
+## Result  
+This is a heatmap of the first part only: with only the genes upregulated in all four regions:  
+![](https://notebooks.hpc.uiowa.edu/biol4386/user/shulliu/view/project/Rplot.png)  
+
 ## Conclusion
 They presented the most extensive human AD brain microarray transcriptomic meta-analysis study to date, incorporating, brain regions both affected and partially spared by AD pathology, and utilize related non-AD disorders to infer AD-specific brain change. They identified seven genes specifically perturbed across all AD brain regions and are considered disease-specific, nineteen genes specifically perturbed in AD brains which could play a role in AD neuropathology.
