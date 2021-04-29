@@ -18,7 +18,10 @@ In order: Gene ID; Gene name; Description; Meta expression change value; p-value
 
 jad_2019_68-4_jad-68-4-jad181085_jad-68-jad181085-s002.xlsx is the table for Meta-analysis of the 21 non-AD datasets;  
 column A-D are Cerebellum; F-I are Frontal Lobe; K-N are Parietal Lobe; P-S are Temporal Lobe.  
+
 In order: Gene ID; Gene name; p-value; regulation direction.  
+[This is the Linux code for downloading the data from the author's supplimentary data.](https://raw.githubusercontent.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/main/Script/Downloading%20data.md)  
+[This is the Rmarkdown for creating the heatmap from the xlsx data.](https://raw.githubusercontent.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/main/Script/Final%20project.Rmd)  
 
 I firstly downloaded the two xlsx files into my notebook directory using terminal. And then clean-up/sort the data properly on Rstudio. Finally I tried to produce the heatmap from the data by heatmap.2  
 For data cleanup:  
@@ -30,8 +33,6 @@ For data cleanup:
 6. Draw the heatmap using `heatmap.2`. The original heatmap used a tricky skill: they used a red-black-green system to represent the up/down regulation, but they didn't used the color near "black". To mimic their map, I didn't use the `colorRampPalette(c("red", "black", "green"))` as my color set directly. Instead, I divided the colorRampPalette into 20 parts and only used the first and last 7 parts. Seems that they divided the color into more parts, but the plot I created is similar enough.
 
 ## Result  
-[This is the Linux code for downloading the data from the author's supplimentary data.](https://raw.githubusercontent.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/main/Script/Downloading%20data.md)  
-[This is the Rmarkdown for creating the heatmap from the xlsx data.](https://raw.githubusercontent.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/main/Script/Final%20project.Rmd)  
 This is the final version of the heatmap.  
 ![](https://raw.githubusercontent.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/main/Output/AD_gene_expression_heatmap.png)  
 Here as the original heatmap did, I found 42 genes that were differentially expressed in all 4 regions. 16 genes were regulated in same direction in all four regions. 10 of them were regulated in same direction in temporal lob, frontal lobe, and parietal lobe, but reverse regulated in cerebellum. The other 16 genes were regulated differently in all four regions but didn't show direction similarity in temporal lob, frontal lobe, and parietal lobe. There are 18 genes that only showed differentially expression in AD patients but not in non-AD patients, thus likely to be AD specific genes.
