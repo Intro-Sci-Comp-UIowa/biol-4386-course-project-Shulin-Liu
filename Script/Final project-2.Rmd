@@ -1,0 +1,227 @@
+---
+title: "Final project"
+author: "Shulin"
+date: "2021/4/27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Run necessary environment. Load the file.
+```{r}
+setwd("/home/shulliu/project")
+install.packages("readxl")
+library(readxl)
+library(dplyr)
+library(gplots)
+ADraw <- read_excel("/home/shulliu/jad_2019_68-4_jad-68-4-jad181085_jad-68-jad181085-s001.xlsx")
+nonADraw <- read_excel("/home/shulliu/jad_2019_68-4_jad-68-4-jad181085_jad-68-jad181085-s002.xlsx")
+```
+
+## Sort
+```{r}
+ADCere <- ADraw[4:2615, 1:5]
+colnames(ADCere) <- ADCere[1,]
+ADCere <- ADCere[-1,]
+ADFrontal <- ADraw[4:2615, 7:11]
+colnames(ADFrontal) <- ADFrontal[1,]
+ADFrontal <- ADFrontal[-1,]
+ADParietal <- ADraw[4:2615, 13:17]
+colnames(ADParietal) <- ADParietal[1,]
+ADParietal <- ADParietal[-1,]
+ADTemporal <- ADraw[4:2615, 19:23]
+colnames(ADTemporal) <- ADTemporal[1,]
+ADTemporal <- ADTemporal[-1,]
+nonCere <- nonADraw[4:2615, 1:4]
+colnames(nonCere) <- nonCere[1,]
+nonCere <- nonCere[-1,]
+nonFrontal <- nonADraw[4:2615, 6:9]
+colnames(nonFrontal) <- nonFrontal[1,]
+nonFrontal <- nonFrontal[-1,]
+nonParietal <-nonADraw[4:2615, 11:14]
+colnames(nonParietal) <- nonParietal[1,]
+nonParietal <-nonParietal[-1,]
+nonTemporal <- nonADraw[4:2615, 16:19]
+colnames(nonTemporal) <- nonTemporal[1,]
+nonTemporal <- nonTemporal[-1,]
+```
+## Remove irrelevant information:
+```{r}
+ADC <- ADCere[,c(2,4)]
+ADP <- ADParietal[,c(2,4)]
+ADF <- ADFrontal[,c(2,4)]
+ADT <- ADTemporal[,c(2,4)]
+```
+## Separate upregulate and down regulate:
+```{r}
+ADFU <- ADF[ADF$`Meta Expression` > 0,]
+ADFD <- ADF[ADF$`Meta Expression` < 0,]
+ADCU <- ADC[ADC$`Meta Expression` > 0,]
+ADCD <- ADC[ADC$`Meta Expression` < 0,]
+ADPU <- ADP[ADP$`Meta Expression` > 0,]
+ADPD <- ADP[ADP$`Meta Expression` < 0,]
+ADTU <- ADT[ADT$`Meta Expression` > 0,]
+ADTD <- ADT[ADT$`Meta Expression` < 0,] 
+ADFU <- ADFU %>% filter_all(any_vars(!is.na(.)))
+ADPU <- ADPU %>% filter_all(any_vars(!is.na(.)))
+ADTU <- ADTU %>% filter_all(any_vars(!is.na(.)))
+ADCU <- ADCU %>% filter_all(any_vars(!is.na(.)))
+ADFD <- ADFD %>% filter_all(any_vars(!is.na(.)))
+ADPD <- ADPD %>% filter_all(any_vars(!is.na(.)))
+ADTD <- ADTD %>% filter_all(any_vars(!is.na(.)))
+ADCD <- ADCD %>% filter_all(any_vars(!is.na(.)))
+ADFC <- ADF %>% filter_all(any_vars(!is.na(.)))
+ADPC <- ADP %>% filter_all(any_vars(!is.na(.)))
+ADTC <- ADT %>% filter_all(any_vars(!is.na(.)))
+ADCC <- ADC %>% filter_all(any_vars(!is.na(.)))
+rownames(ADFU) <- ADFU$`Gene Symbol`
+rownames(ADCU) <- ADCU$`Gene Symbol`
+rownames(ADTU) <- ADTU$`Gene Symbol`
+rownames(ADPU) <- ADPU$`Gene Symbol`
+rownames(ADFD) <- ADFD$`Gene Symbol`
+rownames(ADCD) <- ADCD$`Gene Symbol`
+rownames(ADTD) <- ADTD$`Gene Symbol`
+rownames(ADPD) <- ADPD$`Gene Symbol`
+rownames(ADFC) <- ADFC$`Gene Symbol`
+rownames(ADCC) <- ADCC$`Gene Symbol`
+rownames(ADTC) <- ADTC$`Gene Symbol`
+rownames(ADPC) <- ADPC$`Gene Symbol`
+```
+## Sort All-up-regu/ All-down-regu/ Up-in-TFP/ Down-in-TFP/ Others
+```{r}
+AD4U <- Reduce(intersect,list(ADFU$`Gene Symbol`, ADCU$`Gene Symbol`, ADTU$`Gene Symbol`, ADPU$`Gene Symbol`))
+# Up in all 4 regions
+AD4D <- Reduce(intersect,list(ADFD$`Gene Symbol`, ADCD$`Gene Symbol`, ADTD$`Gene Symbol`, ADPD$`Gene Symbol`))
+# Down in all 4 regions
+AD3U <- Reduce(intersect,list(ADFU$`Gene Symbol`, ADCD$`Gene Symbol`, ADTU$`Gene Symbol`, ADPU$`Gene Symbol`))
+# Up in TFP
+AD3D <- Reduce(intersect,list(ADFD$`Gene Symbol`, ADCU$`Gene Symbol`, ADTD$`Gene Symbol`, ADPD$`Gene Symbol`))
+# Down in TFP
+ADALLN <- Reduce(intersect,list(ADFC$`Gene Symbol`, ADCC$`Gene Symbol`, ADTC$`Gene Symbol`, ADPC$`Gene Symbol`))
+# All changed genes
+ADNAD <- c(AD4U, AD4D, AD3U, AD3D)
+ADAD <- setdiff(ADALLN, ADNAD)  
+# All different
+```
+## combine the table
+```{r}
+ADF4U <- ADFU[AD4U,]
+ADC4U <- ADCU[AD4U,]
+ADT4U <- ADTU[AD4U,]
+ADP4U <- ADPU[AD4U,]
+rownames(ADF4U) <- ADF4U$`Gene Symbol`
+rownames(ADC4U) <- ADC4U$`Gene Symbol`
+rownames(ADT4U) <- ADT4U$`Gene Symbol`
+rownames(ADP4U) <- ADP4U$`Gene Symbol`
+AD4Ucb <- cbind(ADT4U$`Meta Expression`,ADF4U$`Meta Expression`,ADP4U$`Meta Expression`,ADC4U$`Meta Expression`)
+rownames(AD4Ucb) <- AD4U
+colnames(AD4Ucb) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# 4 up finished
+ADF4D <- ADFD[AD4D,]
+ADC4D <- ADCD[AD4D,]
+ADT4D <- ADTD[AD4D,]
+ADP4D <- ADPD[AD4D,]
+rownames(ADF4D) <- ADF4D$`Gene Symbol`
+rownames(ADC4D) <- ADC4D$`Gene Symbol`
+rownames(ADT4D) <- ADT4D$`Gene Symbol`
+rownames(ADP4D) <- ADP4D$`Gene Symbol`
+AD4Dcb <- cbind(ADT4D$`Meta Expression`,ADF4D$`Meta Expression`,ADP4D$`Meta Expression`,ADC4D$`Meta Expression`)
+rownames(AD4Dcb) <- AD4D
+colnames(AD4Dcb) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# 4 down finished
+ADF3D <- ADFD[AD3D,]
+ADC3D <- ADCU[AD3D,]
+ADT3D <- ADTD[AD3D,]
+ADP3D <- ADPD[AD3D,]
+rownames(ADF3D) <- ADF3D$`Gene Symbol`
+rownames(ADC3D) <- ADC3D$`Gene Symbol`
+rownames(ADT3D) <- ADT3D$`Gene Symbol`
+rownames(ADP3D) <- ADP3D$`Gene Symbol`
+AD3Dcb <- cbind(ADT3D$`Meta Expression`,ADF3D$`Meta Expression`,ADP3D$`Meta Expression`,ADC3D$`Meta Expression`)
+rownames(AD3Dcb) <- AD3D
+colnames(AD3Dcb) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# TPF down with C up finished
+ADF3U <- ADFU[AD3U,]
+ADC3U <- ADCD[AD3U,]
+ADT3U <- ADTU[AD3U,]
+ADP3U <- ADPU[AD3U,]
+rownames(ADF3U) <- ADF3U$`Gene Symbol`
+rownames(ADC3U) <- ADC3U$`Gene Symbol`
+rownames(ADT3U) <- ADT3U$`Gene Symbol`
+rownames(ADP3U) <- ADP3U$`Gene Symbol`
+AD3Ucb <- cbind(ADT3U$`Meta Expression`,ADF3U$`Meta Expression`,ADP3U$`Meta Expression`,ADC3U$`Meta Expression`)
+rownames(AD3Ucb) <- AD3U
+colnames(AD3Ucb) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# TPF up with C down finished
+ADFAD <- ADFC[ADAD,]
+ADCAD <- ADCC[ADAD,]
+ADTAD <- ADTC[ADAD,]
+ADPAD <- ADPC[ADAD,]
+rownames(ADFAD) <- ADFAD$`Gene Symbol`
+rownames(ADCAD) <- ADCAD$`Gene Symbol`
+rownames(ADTAD) <- ADTAD$`Gene Symbol`
+rownames(ADPAD) <- ADPAD$`Gene Symbol`
+ADADcb <- cbind(ADTAD$`Meta Expression`,ADFAD$`Meta Expression`,ADPAD$`Meta Expression`,ADCAD$`Meta Expression`)
+rownames(ADADcb) <- ADAD
+colnames(ADADcb) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# All changed but no direction preference finished
+```
+
+## numerize the table
+```{r}
+AD4Ucb_num <- as.data.frame(lapply(AD4Ucb,as.numeric))
+AD4U_matrix <- as.matrix(AD4Ucb_num)
+AD4U_matrix2 <- matrix(AD4U_matrix, nrow = 5, ncol = 4)
+rownames(AD4U_matrix2) <- AD4U
+colnames(AD4U_matrix2) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# 4 up numerized
+AD4Dcb_num <- as.data.frame(lapply(AD4Dcb,as.numeric))
+AD4D_matrix <- as.matrix(AD4Dcb_num)
+AD4D_matrix2 <- matrix(AD4D_matrix, nrow = 11, ncol = 4)
+rownames(AD4D_matrix2) <- AD4D
+colnames(AD4D_matrix2) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# 4 down numerized
+AD3Dcb_num <- as.data.frame(lapply(AD3Dcb,as.numeric))
+AD3D_matrix <- as.matrix(AD3Dcb_num)
+AD3D_matrix2 <- matrix(AD3D_matrix, nrow = 6, ncol = 4)
+rownames(AD3D_matrix2) <- AD3D
+colnames(AD3D_matrix2) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# 3 down numerized
+AD3Ucb_num <- as.data.frame(lapply(AD3Ucb,as.numeric))
+AD3U_matrix <- as.matrix(AD3Ucb_num)
+AD3U_matrix2 <- matrix(AD3U_matrix, nrow = 4, ncol = 4)
+rownames(AD3U_matrix2) <- AD3U
+colnames(AD3U_matrix2) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# 3 up numerized
+ADADcb_num <- as.data.frame(lapply(ADADcb,as.numeric))
+ADAD_matrix <- as.matrix(ADADcb_num)
+ADAD_matrix2 <- matrix(ADAD_matrix, nrow = 16, ncol = 4)
+rownames(ADAD_matrix2) <- ADAD
+colnames(ADAD_matrix2) <- c('Temporal Lobe', 'Frontal Lobe', 'Parietal Lobe', 'Cerebellum')
+# AD numerized
+colorminus <- colorRampPalette(c("#005D00", "green"))(20)
+colorplus <- colorRampPalette(c("red", "#5D0000"))(20)
+colorall <- c(colorplus, colorminus)
+ADmap <- rbind(AD4D_matrix2, AD4U_matrix2, AD3D_matrix2, AD3U_matrix2, ADAD_matrix2)
+```
+## Find the AD-specific genes
+```{r}
+nonADgene <- c(nonCere$Gene_Symbol, nonFrontal$Gene_Symbol, nonParietal$Gene_Symbol, nonTemporal$Gene_Symbol)
+rowADmap <- rownames(ADmap)
+TFAD <- rowADmap %in% nonADgene
+ColorAD <- as.character(TFAD)
+ColorAD[which(ColorAD == "FALSE")] <- "red"
+ColorAD[which(ColorAD == "TRUE")] <- "black"
+```
+## draw the map
+```{r}
+Bar <- c(1:42)
+Bar[1:16] <- "blue"
+Bar[17:26] <- "#FF9900"
+Bar[27:42] <- "#993366"
+pdf("AD_gene_expression_heatmap.pdf", family = "Helvetica")
+heatmap.2(ADmap, Rowv = FALSE, Colv = FALSE, dendrogram = "none", col = colorall, symbreaks = any(ADmap < 0, na.rm=TRUE) || scale!="none", rowsep = c(16, 26) ,cexRow = 0.5,  cexCol = 1, srtCol = 0, colRow = ColorAD, RowSideColors = Bar, lhei = c(0.2,0.5), keysize = 1.4, adjCol = c(0.2,0.8), density.info="histogram", trace = "none", main = "Expression of genes significantly differentially \n expressed across all AD brain regions", xlab = "Brain Region", ylab = "Gene")
+dev.off()
+```
