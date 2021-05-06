@@ -35,7 +35,7 @@ For data cleanup:
 ## Result  
 This is the final version of the heatmap.  
 ![](https://raw.githubusercontent.com/Intro-Sci-Comp-UIowa/biol-4386-course-project-Shulin-Liu/main/Output/AD_gene_expression_heatmap.png)  
-Here as the original heatmap did, I found 42 genes that were differentially expressed in all 4 regions. 16 genes were regulated in same direction in all four regions. 10 of them were regulated in same direction in temporal lob, frontal lobe, and parietal lobe, but reverse regulated in cerebellum. The other 16 genes were regulated differently in all four regions but didn't show direction similarity in temporal lob, frontal lobe, and parietal lobe. There are 18 genes that only showed differentially expression in AD patients but not in non-AD patients, thus likely to be AD specific genes.
+Here as the original heatmap did, I found 42 genes that were differentially expressed in all 4 regions. Up-regulations are shown in green and down-regulations in red. 16 genes were regulated in same direction in all four regions. 10 of them were regulated in same direction in temporal lob, frontal lobe, and parietal lobe, but reverse regulated in cerebellum. The other 16 genes were regulated differently in all four regions but didn't show direction similarity in temporal lob, frontal lobe, and parietal lobe. There are 18 genes that only showed differentially expression in AD patients but not in non-AD patients, thus likely to be AD specific genes.
 I didn't add the side bar label (gene set 1/2/3) in the original heatmap in my heatmap. This is because I didn't find the variables in heatmap.2 to add it directly, and I think it's easier to add it by other softwares after the heatmap is exported. It doesn't worth effort to add it by Rstudio.
 
 ## Conclusion
